@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  myapp:
+    image: nginx:alpine
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev.entrypoints=websecure"
+      - "traefik.http.routers.dev.rule=Host(`tortillas.roldanaraujo.com`)"
+      - "traefik.http.routers.dev.tls.certresolver=letsencr"
+      - "traefik.http.routers.dev.tls.domains[2].main=*.roldanaraujo.com"
+      - "traefik.http.routers.dev.tls.domains[2].sans=roldanaraujo.com"
+    environment:
+      - NGINX_HOST=tortillas.roldanaraujo.com
+      - NGINX_PORT=80
+
+networks:
+  default:
+    external:
+      name: frontend-proxy-network
+
